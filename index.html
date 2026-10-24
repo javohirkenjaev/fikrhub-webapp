@@ -3,77 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FikrHub Dashboard</title>
-    <!-- Telegram Web App API -->
+    <title>FikrHub - Do'konlar va Tavsiyalar Platformasi</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css">
     <script src="app.js"></script>
-    <!-- FontAwesome iconlari uchun -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fa-solid fa-bag-shopping"></i>
-                <i class="fa-solid fa-comment-dots chat-icon"></i>
-                <h1>FikrHub<span class="ai-badge">.ai</span></h1>
+    <div class="app-container">
+        <!-- Yuqori qism: Profil va obuna holati -->
+        <header class="header">
+            <div class="user-info">
+                <span id="username">Foydalanuvchi</span>
+                <span class="badge" id="sub-status">Bepul tarjima</span>
             </div>
-            <p class="subtitle">Biznes Analitika va B2B Hamkorlik</p>
+            <h1>FikrHub 🚀</h1>
+            <p>O'z do'koningizni qo'shing va mijozlar orttiring</p>
         </header>
 
-        <main>
-            <!-- AI Sentiment Tahlili -->
-            <section class="card glass">
-                <h2><i class="fa-solid fa-chart-pie"></i> Mijozlar kayfiyati</h2>
-                <div class="stats">
-                    <div class="stat-item positive">
-                        <span class="label">Ijobiy fikrlar</span>
-                        <span class="value">75%</span>
-                    </div>
-                    <div class="stat-item negative">
-                        <span class="label">E'tirozlar</span>
-                        <span class="value">25%</span>
-                    </div>
-                </div>
-            </section>
+        <!-- Navigatsiya tablari -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('shops', event)">Do'konlar</button>
+            <button class="tab-btn" onclick="switchTab('add-shop', event)">+ Do'kon qo'shish</button>
+            <button class="tab-btn" onclick="switchTab('subscriptions', event)">Obunalar</button>
+        </div>
 
-            <!-- Klasterlangan muammolar -->
-            <section class="card glass">
-                <h2><i class="fa-solid fa-layer-group"></i> Asosiy muammolar (AI Tahlil)</h2>
-                <ul class="problem-list">
-                    <li>
-                        <div class="problem-info">
-                            <i class="fa-solid fa-clock text-danger"></i> Xizmat tezligi
-                        </div>
-                        <span class="badge danger">12 ta</span>
-                    </li>
-                    <li>
-                        <div class="problem-info">
-                            <i class="fa-solid fa-broom text-warning"></i> Tozalik
-                        </div>
-                        <span class="badge warning">3 ta</span>
-                    </li>
-                </ul>
-            </section>
+        <!-- 1. Do'konlar ro'yxati va tavsiyalar -->
+        <section id="shops-tab" class="tab-content active">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Do'kon yoki mahsulotni qidirish..." oninput="filterShops()">
+            </div>
+            <div id="shops-list" class="cards-grid">
+                <!-- Do'konlar shu yerga JavaScript orqali chiqadi -->
+            </div>
+        </section>
 
-            <!-- B2B Ekosistema -->
-            <section class="card glass premium-card">
-                <h2><i class="fa-solid fa-handshake"></i> AI B2B Tavsiyalari</h2>
-                <p class="hint">Muammolarni hal qilish uchun mahalliy hamkorlar:</p>
-                
-                <div class="b2b-partner">
-                    <div class="partner-header">
-                        <h3>"SmartStaff" Trening Markazi</h3>
-                        <span class="rating">⭐ 4.8</span>
+        <!-- 2. Yangi do'kon qo'shish formasi -->
+        <section id="add-shop-tab" class="tab-content">
+            <div class="form-card">
+                <h2>Do'koningizni ro'yxatdan o'tkazing</h2>
+                <form id="shop-form" onsubmit="addNewShop(event)">
+                    <div class="input-group">
+                        <label>Do'kon nomi</label>
+                        <input type="text" id="shop-name" required placeholder="Masalan: TechMarket Uz">
                     </div>
-                    <p class="partner-desc">Xodimlarning mijozlar bilan ishlash tezligini oshirish bo'yicha 3 kunlik amaliy kurslar.</p>
-                    <button id="connectBtn" class="btn primary-btn">Hamkorlik taklifini yuborish</button>
+                    <div class="input-group">
+                        <label>Kategoriya</label>
+                        <select id="shop-category">
+                            <option value="Elektronika">Elektronika</option>
+                            <option value="Kiyim-kechak">Kiyim-kechak</option>
+                            <option value="Ovqatlanish">Ovqatlanish & Fast-food</option>
+                            <option value="Xizmatlar">Xizmatlar</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Qisqacha tavsif va mahsulotlar</label>
+                        <textarea id="shop-desc" rows="3" required placeholder="Sotadigan mahsulotlaringiz haqida yozing..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label>Bog'lanish (Telefon / Telegram username)</label>
+                        <input type="text" id="shop-contact" required placeholder="@dokon_admin yoki +998901234567">
+                    </div>
+                    <button type="submit" class="primary-btn">Do'konni qo'shish</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. Obunalar bo'limi -->
+        <section id="subscriptions-tab" class="tab-content">
+            <div class="sub-cards">
+                <div class="sub-card">
+                    <h3>Standart</h3>
+                    <p class="price">Bepul</p>
+                    <ul>
+                        <li>✔ 1 ta do'kon qo'shish</li>
+                        <li>✔ Oddiy tavsiyalar</li>
+                    </ul>
+                    <button class="outline-btn">Faol</button>
                 </div>
-            </section>
-        </main>
+                <div class="sub-card popular">
+                    <span class="tag">TOP</span>
+                    <h3>VIP Do'kon</h3>
+                    <p class="price">49,000 so'm <span>/ oy</span></p>
+                    <ul>
+                        <li>✔ Yuqorida tavsiya qilish (Top Reklama)</li>
+                        <li>✔ Cheksiz mahsulotlar</li>
+                        <li>✔ VIP nishoni</li>
+                    </ul>
+                    <button class="primary-btn" onclick="buySubscription('VIP')">Obuna bo'lish</button>
+                </div>
+            </div>
+        </section>
     </div>
 
+    <!-- JavaScript fayli ulandi -->
     <script src="app.js"></script>
 </body>
 </html>
