@@ -82,7 +82,7 @@
         .btn-ig { background: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.2); }
         .btn-ph { background: rgba(52, 211, 153, 0.1); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.2); grid-column: span 2; }
 
-        /* Form Elements (For AI context) */
+        /* Form Elements */
         .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--hint); margin: 15px 0 6px 0; }
         .form-input {
             width: 100%; padding: 14px; background: var(--card-bg); border: 1px solid var(--border);
@@ -150,7 +150,7 @@
         </div>
     </div>
 
-    <!-- 2. DO'KON QO'SHISH (Batafsil AI tahlili uchun) -->
+    <!-- 2. DO'KON QO'SHISH -->
     <div id="tab-add" class="section">
         <h2 style="margin: 15px 0; font-size: 22px;">Yangi loyiha kiritish</h2>
         <p style="color: var(--hint); font-size: 14px; margin-bottom: 20px;">Ma'lumotlarni to'liq kiriting. Bu platformamizning AI tizimi tavsiyalarida sizni to'g'ri topishiga yordam beradi.</p>
@@ -169,4 +169,190 @@
                 <option value="Boshqa">Boshqa do'konlar</option>
             </select>
 
-            <label class
+            <label class="form-label">To'liq ma'lumot (AI Tahlili uchun)</label>
+            <textarea id="i_desc" class="form-input" rows="3" required placeholder="Sizning do'koningiz nima sotadi? Qanday xizmatlar bor? Mijoz nima uchun sizni tanlashi kerak? Barcha asosiy so'zlarni yozing."></textarea>
+
+            <label class="form-label">Manzil</label>
+            <input type="text" id="i_address" class="form-input" required placeholder="Masalan: Urganch sh., Al-Xorazmiy ko'chasi 5-uy">
+
+            <label class="form-label">Ish vaqti</label>
+            <input type="text" id="i_time" class="form-input" placeholder="09:00 - 21:00 (Dam olish kunisiz)">
+
+            <label class="form-label">Telefon raqam</label>
+            <input type="text" id="i_phone" class="form-input" required placeholder="+998 90 123 45 67">
+
+            <label class="form-label">Telegram Username</label>
+            <input type="text" id="i_tg" class="form-input" placeholder="@dokon_admin">
+
+            <label class="form-label">Instagram Link (Username)</label>
+            <input type="text" id="i_ig" class="form-input" placeholder="@dokon_instagram">
+
+            <button type="submit" class="main-btn"><i class="fas fa-check-circle"></i> Ommaga taqdim etish</button>
+        </form>
+        <br><br>
+    </div>
+
+    <!-- 3. VIP OBUNA SAHIFASI -->
+    <div id="tab-vip" class="section">
+        <div class="vip-banner">
+            <i class="fas fa-crown"></i>
+            <h2>VIP Statusga O'tish</h2>
+            <p style="color: var(--hint); font-size: 14px;">Biznesingizni FikrHub Pro orqali eng yuqori cho'qqiga olib chiqing.</p>
+            
+            <ul class="vip-features">
+                <li><i class="fas fa-arrow-up"></i> Qidiruvda va do'konlar ro'yxatida doim eng 1-o'rinda chiqish.</li>
+                <li><i class="fas fa-robot"></i> FikrHub AI tomonidan mijozlarga avtomatik doimiy tavsiya etilish.</li>
+                <li><i class="fas fa-shield-check"></i> VIP status belgisi (Ishonchli do'kon).</li>
+                <li><i class="fas fa-chart-line"></i> Cheklanmagan qo'shimcha so'zlar kiritish va statistika.</li>
+            </ul>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="info-btn" onclick="document.getElementById('infoModal').style.display='flex'"><i class="fas fa-info-circle"></i> Batafsil Info</button>
+                <button class="main-btn" style="width: auto; margin-top: 0;" onclick="document.getElementById('payModal').style.display='flex'"><i class="fas fa-credit-card"></i> 99,000 UZS / Oy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal-overlay">
+        <div class="modal-box">
+            <i class="fas fa-times close-modal" onclick="document.getElementById('infoModal').style.display='none'"></i>
+            <h3 style="margin-bottom: 15px; color: var(--gold);"><i class="fas fa-info-circle"></i> VIP qanday ishlaydi?</h3>
+            <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">
+                Siz VIP obunani xarid qilganingizdan so'ng, tizim avtomatik sizning do'koningizni platforma bo'ylab eng faol zonaga olib chiqadi.<br><br>
+                Yaqin kunlarda qo'shiladigan <b>FikrHub AI (Sun'iy intellekt)</b> xaridor nima qidirayotganini tahlil qilib, birinchi navbatda VIP do'konlarni taklif qiladi. Oddiy do'konlar esa faqat aniq qidiruv orqaligina topiladi.
+            </p>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payModal" class="modal-overlay">
+        <div class="modal-box" style="text-align: center;">
+            <i class="fas fa-times close-modal" onclick="document.getElementById('payModal').style.display='none'"></i>
+            <h3 style="margin-bottom: 10px;">VIP Xarid Qilish</h3>
+            <p style="font-size: 13px; color: var(--hint);">VIP statusni yoqish uchun quyidagi karta raqamiga to'lov qiling. To'lov qilingach, chekni adminga yuboring.</p>
+            
+            <div class="card-number-box">
+                5614 6835 1259 8426
+            </div>
+            <p style="color: #60a5fa; font-size: 14px; margin-bottom: 20px;">Qabul qiluvchi: Javohir Kenjayev</p>
+
+            <button class="main-btn" style="background: #10b981;" onclick="confirmPayment()"><i class="fas fa-check"></i> To'lovni amalga oshirdim</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('tab-home', this)">
+            <i class="fas fa-compass"></i> <span>Asosiy</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-add', this)">
+            <i class="fas fa-plus-square"></i> <span>Qo'shish</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-vip', this)">
+            <i class="fas fa-crown"></i> <span>Pro / VIP</span>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const defaultShops = [
+            { name: "Texnomart Urganch", category: "Elektronika", desc: "Muddatli to'lovga maishiy texnika, noutbuk va smartfonlar. Eng katta tanlov va arzon narxlar.", address: "Urganch, Al-Xorazmiy", time: "09:00-21:00", phone: "+998712002220", tg: "@texnomart", ig: "texnomart", is_vip: true, rating: 4.9 },
+            { name: "Khorezm IT Academy", category: "Ta'lim", desc: "Zamonaviy IT kasblar, Dasturlash (Python, Web), Grafik dizayn va xorijiy tillar.", address: "Urganch, Darital yonida", time: "08:00-20:00", phone: "+998991234567", tg: "@khorezm_it", ig: "khorezmit", is_vip: true, rating: 4.8 },
+            { name: "Rayhon Taomlari", category: "Oziq-ovqat", desc: "Xorazmning eng mazali milliy taomlari, shashlik va somsalar. Oila a'zolar uchun qulay muhit.", address: "Urganch markazi", time: "07:00-23:00", phone: "+998901112233", tg: "@rayhon_uz", ig: "rayhon_urganch", is_vip: false, rating: 4.5 },
+            { name: "Xiva Gilamlari", category: "Boshqa", desc: "Xiva naqshlari asosida qo'lda to'qilgan tabiiy gilamlar.", address: "Xiva, Ichan Qal'a", time: "09:00-18:00", phone: "+998990001122", tg: "@xivagilam", ig: "xiva_carpets", is_vip: false, rating: 4.6 }
+        ];
+
+        // MUHIM O'ZGARISH: Xotirani tozalash uchun yangi nom ishlatildi
+        let shopsData = JSON.parse(localStorage.getItem('fikrhub_final')) || defaultShops;
+
+        function renderShops(dataList) {
+            const container = document.getElementById('shopsContainer');
+            container.innerHTML = '';
+            
+            const sortedData = [...dataList].sort((a, b) => b.is_vip - a.is_vip);
+
+            if (sortedData.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--hint);"><i class="fas fa-search-minus" style="font-size: 40px; margin-bottom: 10px;"></i><br>Bunday do\'kon topilmadi.</div>';
+                return;
+            }
+
+            sortedData.forEach(shop => {
+                let html = `
+                <div class="shop-card ${shop.is_vip ? 'vip-card' : ''}">
+                    <div class="shop-title">${shop.name}</div>
+                    <div class="shop-meta">
+                        <span><i class="fas fa-tag"></i> ${shop.category}</span>
+                        <span><i class="fas fa-star" style="color:var(--gold)"></i> ${shop.rating || 5.0}</span>
+                    </div>
+                    <p class="shop-desc">
+                        <b>Ma'lumot:</b> ${shop.desc}<br>
+                        <b>Manzil:</b> ${shop.address}<br>
+                        <b>Vaqti:</b> ${shop.time || "Ko'rsatilmagan"}
+                    </p>
+                    <div class="contact-grid">
+                        <a href="${shop.tg ? 'https://t.me/'+shop.tg.replace('@','') : '#'}" class="contact-btn btn-tg"><i class="fab fa-telegram"></i> Telegram</a>
+                        <a href="${shop.ig ? 'https://instagram.com/'+shop.ig.replace('@','') : '#'}" class="contact-btn btn-ig"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="tel:${shop.phone}" class="contact-btn btn-ph"><i class="fas fa-phone-alt"></i> ${shop.phone}</a>
+                    </div>
+                </div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function searchShops() {
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = shopsData.filter(s => 
+                s.name.toLowerCase().includes(query) || 
+                s.desc.toLowerCase().includes(query) || 
+                s.category.toLowerCase().includes(query) ||
+                s.address.toLowerCase().includes(query)
+            );
+            renderShops(filtered);
+        }
+
+        function saveShop(e) {
+            e.preventDefault();
+            const newShop = {
+                name: document.getElementById('i_name').value,
+                category: document.getElementById('i_category').value,
+                desc: document.getElementById('i_desc').value,
+                address: document.getElementById('i_address').value,
+                time: document.getElementById('i_time').value,
+                phone: document.getElementById('i_phone').value,
+                tg: document.getElementById('i_tg').value,
+                ig: document.getElementById('i_ig').value,
+                is_vip: false,
+                rating: 5.0
+            };
+
+            shopsData.unshift(newShop);
+            localStorage.setItem('fikrhub_final', JSON.stringify(shopsData));
+
+            document.getElementById('addForm').reset();
+            switchTab('tab-home', document.querySelectorAll('.nav-item')[0]);
+            
+            renderShops(shopsData);
+            tg.showAlert("✅ Do'koningiz avtomatik tarzda platformaga qo'shildi va qidiruvlarda faollashdi!");
+        }
+
+        function confirmPayment() {
+            document.getElementById('payModal').style.display='none';
+            tg.showAlert("To'lov tekshirilmoqda. Iltimos, chekni administrator Javohir Kenjayevga yuboring. Tasdiqlangandan so'ng do'koningiz avtomat VIP bo'ladi.");
+        }
+
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            el.classList.add('active');
+            try { tg.HapticFeedback.impactOccurred('light'); } catch(e){}
+        }
+
+        // MUHIM O'ZGARISH: Sahifa ochilishi bilan darhol do'konlarni chizish
+        renderShops(shopsData);
+    </script>
+</body>
+</html>
