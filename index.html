@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FikrHub Dashboard</title>
+    <!-- Telegram Web App API -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js"></script>
+    <!-- FontAwesome iconlari uchun -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <i class="fa-solid fa-comment-dots chat-icon"></i>
+                <h1>FikrHub<span class="ai-badge">.ai</span></h1>
+            </div>
+            <p class="subtitle">Biznes Analitika va B2B Hamkorlik</p>
+        </header>
+
+        <main>
+            <!-- AI Sentiment Tahlili -->
+            <section class="card glass">
+                <h2><i class="fa-solid fa-chart-pie"></i> Mijozlar kayfiyati</h2>
+                <div class="stats">
+                    <div class="stat-item positive">
+                        <span class="label">Ijobiy fikrlar</span>
+                        <span class="value">75%</span>
+                    </div>
+                    <div class="stat-item negative">
+                        <span class="label">E'tirozlar</span>
+                        <span class="value">25%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Klasterlangan muammolar -->
+            <section class="card glass">
+                <h2><i class="fa-solid fa-layer-group"></i> Asosiy muammolar (AI Tahlil)</h2>
+                <ul class="problem-list">
+                    <li>
+                        <div class="problem-info">
+                            <i class="fa-solid fa-clock text-danger"></i> Xizmat tezligi
+                        </div>
+                        <span class="badge danger">12 ta</span>
+                    </li>
+                    <li>
+                        <div class="problem-info">
+                            <i class="fa-solid fa-broom text-warning"></i> Tozalik
+                        </div>
+                        <span class="badge warning">3 ta</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- B2B Ekosistema -->
+            <section class="card glass premium-card">
+                <h2><i class="fa-solid fa-handshake"></i> AI B2B Tavsiyalari</h2>
+                <p class="hint">Muammolarni hal qilish uchun mahalliy hamkorlar:</p>
+                
+                <div class="b2b-partner">
+                    <div class="partner-header">
+                        <h3>"SmartStaff" Trening Markazi</h3>
+                        <span class="rating">⭐ 4.8</span>
+                    </div>
+                    <p class="partner-desc">Xodimlarning mijozlar bilan ishlash tezligini oshirish bo'yicha 3 kunlik amaliy kurslar.</p>
+                    <button id="connectBtn" class="btn primary-btn">Hamkorlik taklifini yuborish</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
