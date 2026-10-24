@@ -2,100 +2,333 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FikrHub - Do'konlar va Tavsiyalar Platformasi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FikrHub Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="app.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #0f172a);
+            --text-color: var(--tg-theme-text-color, #f8fafc);
+            --hint-color: var(--tg-theme-hint-color, #94a3b8);
+            --btn-color: var(--tg-theme-button-color, #3b82f6);
+            --btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
+            padding-bottom: 80px;
+        }
+
+        /* Glassmorphism Header */
+        .header {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.05));
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 { font-size: 28px; font-weight: 800; background: -webkit-linear-gradient(#60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header p { color: var(--hint-color); font-size: 14px; margin-top: 5px; }
+
+        /* Search Bar */
+        .search-container { position: relative; margin-bottom: 20px; }
+        .search-container i { position: absolute; left: 15px; top: 14px; color: var(--hint-color); }
+        .search-input {
+            width: 100%; padding: 14px 14px 14px 45px;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 12px; color: var(--text-color); font-size: 15px; outline: none; transition: 0.3s;
+        }
+        .search-input:focus { border-color: var(--btn-color); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards */
+        .shops-grid { display: grid; gap: 15px; }
+        .shop-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 16px; position: relative; overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .shop-card.vip::before {
+            content: 'VIP'; position: absolute; top: 10px; right: -25px;
+            background: #eab308; color: #000; font-size: 10px; font-weight: bold;
+            padding: 4px 25px; transform: rotate(45deg); box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .shop-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .shop-title { font-size: 18px; font-weight: 700; }
+        .category-tag { font-size: 11px; padding: 4px 8px; border-radius: 20px; background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .shop-desc { font-size: 14px; color: var(--hint-color); margin-bottom: 15px; line-height: 1.4; }
+        .action-btn {
+            display: inline-block; width: 100%; text-align: center; text-decoration: none;
+            background: var(--btn-color); color: var(--btn-text);
+            padding: 12px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s;
+        }
+        .action-btn:active { transform: scale(0.98); opacity: 0.9; }
+
+        /* Form Inputs */
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--hint-color); }
+        .form-control {
+            width: 100%; padding: 12px; background: var(--card-bg);
+            border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-color); outline: none;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border-top: 1px solid var(--card-border);
+            display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--hint-color); text-decoration: none; font-size: 12px; gap: 4px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-item.active { color: var(--btn-color); }
+        .nav-item i { font-size: 20px; }
+
+        /* Loader */
+        .loader { text-align: center; padding: 20px; color: var(--hint-color); display: none; }
+        .loader i { font-size: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Yuqori qism: Profil va obuna holati -->
-        <header class="header">
-            <div class="user-info">
-                <span id="username">Foydalanuvchi</span>
-                <span class="badge" id="sub-status">Bepul tarjima</span>
-            </div>
-            <h1>FikrHub 🚀</h1>
-            <p>O'z do'koningizni qo'shing va mijozlar orttiring</p>
-        </header>
 
-        <!-- Navigatsiya tablari -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('shops', event)">Do'konlar</button>
-            <button class="tab-btn" onclick="switchTab('add-shop', event)">+ Do'kon qo'shish</button>
-            <button class="tab-btn" onclick="switchTab('subscriptions', event)">Obunalar</button>
-        </div>
-
-        <!-- 1. Do'konlar ro'yxati va tavsiyalar -->
-        <section id="shops-tab" class="tab-content active">
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Do'kon yoki mahsulotni qidirish..." oninput="filterShops()">
-            </div>
-            <div id="shops-list" class="cards-grid">
-                <!-- Do'konlar shu yerga JavaScript orqali chiqadi -->
-            </div>
-        </section>
-
-        <!-- 2. Yangi do'kon qo'shish formasi -->
-        <section id="add-shop-tab" class="tab-content">
-            <div class="form-card">
-                <h2>Do'koningizni ro'yxatdan o'tkazing</h2>
-                <form id="shop-form" onsubmit="addNewShop(event)">
-                    <div class="input-group">
-                        <label>Do'kon nomi</label>
-                        <input type="text" id="shop-name" required placeholder="Masalan: TechMarket Uz">
-                    </div>
-                    <div class="input-group">
-                        <label>Kategoriya</label>
-                        <select id="shop-category">
-                            <option value="Elektronika">Elektronika</option>
-                            <option value="Kiyim-kechak">Kiyim-kechak</option>
-                            <option value="Ovqatlanish">Ovqatlanish & Fast-food</option>
-                            <option value="Xizmatlar">Xizmatlar</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Qisqacha tavsif va mahsulotlar</label>
-                        <textarea id="shop-desc" rows="3" required placeholder="Sotadigan mahsulotlaringiz haqida yozing..."></textarea>
-                    </div>
-                    <div class="input-group">
-                        <label>Bog'lanish (Telefon / Telegram username)</label>
-                        <input type="text" id="shop-contact" required placeholder="@dokon_admin yoki +998901234567">
-                    </div>
-                    <button type="submit" class="primary-btn">Do'konni qo'shish</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- 3. Obunalar bo'limi -->
-        <section id="subscriptions-tab" class="tab-content">
-            <div class="sub-cards">
-                <div class="sub-card">
-                    <h3>Standart</h3>
-                    <p class="price">Bepul</p>
-                    <ul>
-                        <li>✔ 1 ta do'kon qo'shish</li>
-                        <li>✔ Oddiy tavsiyalar</li>
-                    </ul>
-                    <button class="outline-btn">Faol</button>
-                </div>
-                <div class="sub-card popular">
-                    <span class="tag">TOP</span>
-                    <h3>VIP Do'kon</h3>
-                    <p class="price">49,000 so'm <span>/ oy</span></p>
-                    <ul>
-                        <li>✔ Yuqorida tavsiya qilish (Top Reklama)</li>
-                        <li>✔ Cheksiz mahsulotlar</li>
-                        <li>✔ VIP nishoni</li>
-                    </ul>
-                    <button class="primary-btn" onclick="buySubscription('VIP')">Obuna bo'lish</button>
-                </div>
-            </div>
-        </section>
+    <div class="header">
+        <h1>FikrHub</h1>
+        <p id="user-greeting">Barcha xizmatlar bir joyda</p>
     </div>
 
-    <!-- JavaScript fayli ulandi -->
-    <script src="app.js"></script>
+    <!-- 1. ASOSIY SAHIFA: Do'konlar ro'yxati -->
+    <div id="home-sec" class="section active">
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="Do'konlar, tovarlar, xizmatlarni qidirish..." oninput="debounceSearch()">
+        </div>
+        
+        <div class="loader" id="loading"><i class="fas fa-circle-notch"></i></div>
+        
+        <div class="shops-grid" id="shopsContainer">
+            <!-- API dan ma'lumotlar shu yerga tushadi -->
+        </div>
+    </div>
+
+    <!-- 2. DO'KON QO'SHISH SAHIFASI -->
+    <div id="add-sec" class="section">
+        <div class="shop-card">
+            <h2 style="margin-bottom: 20px; font-size: 20px;">Platformaga qo'shilish</h2>
+            <form id="addShopForm" onsubmit="submitNewShop(event)">
+                <div class="form-group">
+                    <label>Do'kon/Loyiha nomi</label>
+                    <input type="text" id="s_name" class="form-control" required placeholder="FikrHub Store">
+                </div>
+                <div class="form-group">
+                    <label>Yo'nalishi (Kategoriya)</label>
+                    <select id="s_cat" class="form-control">
+                        <option value="Elektronika">Elektronika va Texnika</option>
+                        <option value="Xizmatlar">Xizmatlar va Servis</option>
+                        <option value="Ta'lim">Ta'lim va Kurslar</option>
+                        <option value="Ovqatlanish">Restoran va Fast-food</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Batafsil tavsif</label>
+                    <textarea id="s_desc" class="form-control" rows="3" required placeholder="Mijozlar siz haqingizda nimalarni bilishi kerak?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Aloqa (Telegram username)</label>
+                    <input type="text" id="s_contact" class="form-control" required placeholder="@admin_username">
+                </div>
+                <button type="submit" class="action-btn" id="submitBtn">
+                    <i class="fas fa-plus-circle"></i> Do'konni Yaratish
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. OBUNA / PRO SAHIFA -->
+    <div id="pro-sec" class="section">
+        <div class="shop-card" style="text-align: center; border: 1px solid var(--btn-color);">
+            <i class="fas fa-crown" style="font-size: 40px; color: #eab308; margin-bottom: 15px;"></i>
+            <h2 style="margin-bottom: 10px;">VIP Do'kon Statusi</h2>
+            <p class="shop-desc">Mijozlar qidiruvida doim 1-o'rinda turing, ishonch belgisiga ega bo'ling va cheksiz mahsulotlar soting.</p>
+            <h3 style="font-size: 24px; margin: 20px 0;">49,000 <span style="font-size: 14px; color: var(--hint-color);">UZS / oy</span></h3>
+            <button class="action-btn" onclick="initiatePayment()"><i class="fas fa-credit-card"></i> Telegram orqali to'lash</button>
+        </div>
+    </div>
+
+    <!-- Pastki Navigatsiya -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="nav('home-sec', this)">
+            <i class="fas fa-home"></i> <span>Asosiy</span>
+        </div>
+        <div class="nav-item" onclick="nav('add-sec', this)">
+            <i class="fas fa-plus-square"></i> <span>Qo'shish</span>
+        </div>
+        <div class="nav-item" onclick="nav('pro-sec', this)">
+            <i class="fas fa-star"></i> <span>VIP</span>
+        </div>
+    </div>
+
+    <script>
+        // Telegram UI ni moslashtirish
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
+
+        if (tg.initDataUnsafe?.user) {
+            document.getElementById('user-greeting').innerText = `Xush kelibsiz, ${tg.initDataUnsafe.user.first_name}!`;
+        }
+
+        // TASHQI API SERVER MANZILI (Agar backend yoqilmagan bo'lsa Offline rejimda ishlaydi)
+        const API_URL = "http://127.0.0.1:8000/api";
+        
+        // Lokal xotira (Offline fallback uchun)
+        let localShops = JSON.parse(localStorage.getItem('fikrhub_pro_shops')) || [
+            { name: "Digital City", category: "Elektronika", description: "Barcha turdagi gadjetlar markazi.", contact: "@digital_admin", is_vip: true },
+            { name: "EduCenter", category: "Ta'lim", description: "Dasturlash va ingliz tili kurslari.", contact: "@edu_bot", is_vip: false }
+        ];
+
+        // Do'konlarni ekranga chizish funksiyasi
+        function renderShops(data) {
+            const container = document.getElementById('shopsContainer');
+            container.innerHTML = '';
+            
+            if (data.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 30px; color: var(--hint-color);">
+                    <i class="fas fa-box-open" style="font-size: 40px; margin-bottom: 10px;"></i><br>Hech narsa topilmadi.
+                </div>`;
+                return;
+            }
+
+            data.forEach(shop => {
+                const card = document.createElement('div');
+                card.className = `shop-card ${shop.is_vip ? 'vip' : ''}`;
+                card.innerHTML = `
+                    <div class="shop-header">
+                        <div class="shop-title">${shop.name}</div>
+                        <div class="category-tag">${shop.category}</div>
+                    </div>
+                    <div class="shop-desc">${shop.description}</div>
+                    <a href="https://t.me/${shop.contact.replace('@', '')}" target="_blank" class="action-btn" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">
+                        <i class="fab fa-telegram"></i> Bog'lanish: ${shop.contact}
+                    </a>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // API dan ma'lumotlarni tortish
+        async function fetchShops() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('shopsContainer').innerHTML = '';
+            
+            try {
+                // Tashqi serverga so'rov yuborish
+                const response = await fetch(`${API_URL}/shops`);
+                if (!response.ok) throw new Error("API xatosi");
+                const data = await response.json();
+                renderShops(data);
+            } catch (error) {
+                console.warn("Tashqi server ulanmadi. Offline (LocalStorage) ishlatilmoqda.");
+                // Server ishlamasa lokal bazani ko'rsatish
+                const sortedLocal = localShops.sort((a, b) => b.is_vip - a.is_vip);
+                renderShops(sortedLocal);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Yangi do'kon qo'shish
+        async function submitNewShop(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Yuborilmoqda...';
+            
+            const newShop = {
+                name: document.getElementById('s_name').value,
+                category: document.getElementById('s_cat').value,
+                description: document.getElementById('s_desc').value,
+                contact: document.getElementById('s_contact').value,
+                is_vip: false
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/shops`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newShop)
+                });
+                if (!response.ok) throw new Error("Yuborib bo'lmadi");
+                tg.showAlert("✅ Do'koningiz tashqi serverga muvaffaqiyatli qo'shildi!");
+            } catch (error) {
+                // Agar server ishlamasa lokal saqlaymiz
+                localShops.push(newShop);
+                localStorage.setItem('fikrhub_pro_shops', JSON.stringify(localShops));
+                tg.showAlert("✅ Do'koningiz muvaffaqiyatli qo'shildi (Offline Mode)!");
+            }
+
+            document.getElementById('addShopForm').reset();
+            btn.innerHTML = '<i class="fas fa-plus-circle"></i> Do\'konni Yaratish';
+            nav('home-sec', document.querySelectorAll('.nav-item')[0]);
+            fetchShops();
+        }
+
+        // Qidiruv tizimi (Debounce bilan optimallashtirilgan)
+        let timeout = null;
+        function debounceSearch() {
+            clearTimeout(timeout);
+            timeout = setTimeout(async () => {
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                try {
+                    const res = await fetch(`${API_URL}/shops/search?query=${query}`);
+                    if (!res.ok) throw new Error("API xatosi");
+                    const data = await res.json();
+                    renderShops(data);
+                } catch (e) {
+                    const filtered = localShops.filter(s => s.name.toLowerCase().includes(query) || s.description.toLowerCase().includes(query));
+                    renderShops(filtered);
+                }
+            }, 300);
+        }
+
+        // To'lov funksiyasi (Kelajakda Telegram Stars API ulanadi)
+        function initiatePayment() {
+            tg.showConfirm("VIP obunani sotib olish uchun Telegram to'lov sahifasiga o'tasizmi?", (agreed) => {
+                if(agreed) {
+                    tg.showAlert("Tez kunda! To'lov shlyuzlari (Click/Payme/Stars) Backend serverga ulanmoqda.");
+                }
+            });
+        }
+
+        // Sahifalar bo'ylab navigatsiya
+        function nav(sectionId, element) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            element.classList.add('active');
+            
+            if(sectionId === 'home-sec') fetchShops();
+            
+            // Haptic feedback (Telegram vibratsiyasi)
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        // Ilova ishga tushganda do'konlarni yuklash
+        window.onload = fetchShops;
+    </script>
 </body>
 </html>
